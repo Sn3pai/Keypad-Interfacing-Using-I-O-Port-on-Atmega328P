@@ -5,7 +5,7 @@
 #include "debug_prints.c"
 
 #define BAUD 115200
-#define MYUBRR ((F_CPU / (8UL * BAUD)) - 1)  // Double speed mode
+#define MYUBRR ((F_CPU / (8UL * BAUD)) - 1)  
 
 #define KEYPAD_DDR_ROWS DDRB
 #define KEYPAD_PORT_ROWS PORTB
@@ -43,7 +43,7 @@ int main(void)
 		key_pressed = read_keypad();
 		if (key_pressed != 0)
 		{
-			_delay_ms(200);  // Debounce
+			_delay_ms(200); 
 			UART_send_char(keypad_tbl2[key_pressed - 1]);
 			key_pressed = 0;
 		}
@@ -57,15 +57,15 @@ unsigned char read_keypad()
 	const unsigned char col_pins[4] = {4,5,6,7}; // PD4-PD7
 	unsigned char r, c;
 
-	KEYPAD_DDR_ROWS &= 0xF0;  // Rows input
-	KEYPAD_PORT_ROWS |= 0x0F; // Pull-ups
-	KEYPAD_DDR_COLS |= 0xF0;  // Columns output
-	KEYPAD_PORT_COLS |= 0xF0; // Default HIGH
+	KEYPAD_DDR_ROWS &= 0xF0;  
+	KEYPAD_PORT_ROWS |= 0x0F; 
+	KEYPAD_DDR_COLS |= 0xF0;  
+	KEYPAD_PORT_COLS |= 0xF0; 
 
 	for (c = 0; c < 4; c++)
 	{
-		KEYPAD_PORT_COLS |= 0xF0;                // Reset all HIGH
-		KEYPAD_PORT_COLS &= ~(1 << col_pins[c]); // Drive one LOW
+		KEYPAD_PORT_COLS |= 0xF0;                
+		KEYPAD_PORT_COLS &= ~(1 << col_pins[c]); 
 		_delay_us(5);
 
 		for (r = 0; r < 4; r++)
@@ -83,9 +83,9 @@ void UART_init(unsigned int ubrr)
 {
 	UBRR0H = (unsigned char)(ubrr >> 8);
 	UBRR0L = (unsigned char)ubrr;
-	UCSR0A |= (1 << U2X0);          // Double speed
+	UCSR0A |= (1 << U2X0);          
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
-	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // 8-bit data
+	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); 
 }
 
 void UART_send_char(unsigned char data)
@@ -106,3 +106,4 @@ void UART_send_int(int data)
 	itoa(data, buffer, 10);
 	UART_send_string(buffer);
 }
+
